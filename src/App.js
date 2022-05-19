@@ -7,6 +7,7 @@ import Home from './layout/home/Home';
 import Single from './layout/single/Single';
 import New from './layout/new/New';
 import List from './layout/list/List';
+import Login from './layout/login/Login';
 
 function App() {
   let [login, login_update] = useState(true)
@@ -17,7 +18,7 @@ function App() {
         <Routes>
           <Route path="/">
             <Route index element={<Home/>}/>
-            <Route path="login" element={<login/>}/>
+            <Route path="login" element={<Login/>}/>
             <Route path="users">
               <Route index element={<List/>}/>
               <Route path=":userEmail" element={<Single/>}/>
