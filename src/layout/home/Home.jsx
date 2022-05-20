@@ -1,9 +1,11 @@
+
 import React from 'react'
 import { Col } from 'react-bootstrap'
 import { Navbar } from '../../components/navbar/Navbar'
 import { Sidebar } from '../../components/sidebar/Sidebar'
 import Chart_atten from '../../components/widget/Chart_atten'
 import Widget from '../../components/widget/Widget'
+import Widgets from '../../components/widget/Widgets'
 import "./home.scss"
 //import Unity, { UnityContext } from "react-unity-webgl";
 
@@ -23,12 +25,16 @@ export default function Home() {
       <div className="homeContainer">
         <Navbar/>
         <div className="widgets">
-          <Col xxl={5}>
+          <Widgets type="user"/>
+          <Widgets type="order"/>
+          <Widgets type="earning"/>
+          <Widgets type="balance"/>
+          {/* <Col xxl={5}>
             <Widget/>
-          </Col>
-          <Col xxl={4}>
+          </Col> */}
+          {/* <Col xxl={4}>
             <Chart_atten />
-          </Col>
+          </Col> */}
           {/* <Unity className='unity' unityContext={unityContext}/> */}
         </div>
       </div>

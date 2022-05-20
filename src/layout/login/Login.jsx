@@ -19,7 +19,8 @@ export default function Login(props) {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        navitage("/");
+        console.log(user);
+        // navitage("/main");
       })
       .catch((error) => {
         setError(true);
