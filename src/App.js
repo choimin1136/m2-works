@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { BrowserRouter, Route, Routes, } from "react-router-dom";
 import Login_User from './layout/login/Login_user';
 import Dashboard from './container/Dashboard';
@@ -8,12 +8,15 @@ import Single from './layout/single/Single';
 import New from './layout/new/New';
 import List from './layout/list/List';
 import Login from './layout/login/Login';
+import "./style/dark.scss";
+import { DarkModeContext } from './context/darkModeContext';
 
 function App() {
   let [login, login_update] = useState(true)
+  const {darkMode} = useContext(DarkModeContext)
 
   return (
-    <div className="App">
+    <div className={darkMode ? "app dark" : "app"}>
       <BrowserRouter>
         <Routes>
           <Route path="/">

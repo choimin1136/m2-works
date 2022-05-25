@@ -6,6 +6,7 @@ import { Sidebar } from '../../components/sidebar/Sidebar'
 import Chart_atten from '../../components/widget/Chart_atten'
 import Widget from '../../components/widget/Widget'
 import Widgets from '../../components/widget/Widgets'
+import Single from '../single/Single'
 import "./home.scss"
 //import Unity, { UnityContext } from "react-unity-webgl";
 
@@ -29,13 +30,19 @@ export default function Home() {
           <Widgets type="order"/>
           <Widgets type="earning"/>
           <Widgets type="balance"/>
-          {/* <Col xxl={5}>
-            <Widget/>
-          </Col> */}
-          {/* <Col xxl={4}>
-            <Chart_atten />
-          </Col> */}
           {/* <Unity className='unity' unityContext={unityContext}/> */}
+        </div>
+        <div className="a_widgets">
+          <Col xxl={6} xs={6}>
+            <Widget/>
+          </Col>
+          <Col xxl={6} xs={6}>
+            <Chart_atten />
+          </Col>
+        </div>
+
+        <div className="a_widgets">
+          <Single />
         </div>
       </div>
 

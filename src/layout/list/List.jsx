@@ -6,15 +6,13 @@ import './list.scss'
 
 const List = () => {
   return (
-      <div>
-          <div className="list">
-            <Sidebar/>
-            <div className="listContainer">
-              <Navbar />
-              <Datatable/>
-            </div>
-          </div>
+    <div className="list">
+      <Sidebar/>
+      <div className="listContainer">
+        <Navbar />
+        <Datatable/>
       </div>
+    </div>
   )
 }
 

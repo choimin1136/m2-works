@@ -11,13 +11,13 @@ const Chart_atten = () => {
     <div className="charts">
       <div className="widget">
       <div className="left">
-        <span className="title">일간 근무 시간</span>
+        <span className="title">Daily cumulative time</span>
         <div className="progressbar"><ProgressBar variant="success" now={90} /></div>
         <div className="date_box">
             <span className="att_date">{atten_date[0]}</span>
             <div className="time_box">
                 7
-                <span className="title">시간</span>
+                <span className="title">hours</span>
             </div>
         </div>
       </div>
@@ -28,13 +28,13 @@ const Chart_atten = () => {
       </div>
       <div className="widget">
       <div className="left">
-        <span className="title">월간 근무 시간</span>
+        <span className="title">Monthly cumulative time</span>
         <div className="progressbar"><ProgressBar variant="warning" now={40} /></div>
         <div className="date_box">
             <span className="att_date">2022.xx</span>
             <div className="time_box">
                 30
-                <span className="title">시간</span>
+                <span className="title">hours</span>
             </div>
         </div>
       </div>

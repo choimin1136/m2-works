@@ -9,6 +9,7 @@ const Datatable = () => {
   return (
     <div className="datatable">
       <DataGrid
+        className="datagrid"
         rows={userRows}
         columns={userColumns}
         pageSize={10}

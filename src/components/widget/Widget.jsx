@@ -9,30 +9,29 @@ const Widget = () => {
 
   return (
     <div className="atten">
-      <span className="title">출/퇴근 관리</span>
+      <span className="title">Attendance & Leave</span>
       <div className="widget">
         <div className="left">
-          <span className="title">출근</span>
-          <span className="location">장소 : {location[0]}</span>
+          <span className="title">Attendance</span>
+          <span className="location">Location : {location[0]}</span>
           <span className="att_date">{atten_date[0]}</span>
         </div>
         <div className="center"></div>
         <div className="right">
           <span className="att_date"></span>
-          <Button className="buttons" variant="outline-success">출근 확인</Button>
+          <Button className="buttons" variant="outline-success">Check Now</Button>
         </div>
       </div>
       <div className="widget">
       <div className="left">
-        <span className="title">퇴근</span>
-        <span className="location">장소 : {location[1]}</span>
+        <span className="title">Leave</span>
+        <span className="location">Location : {location[1]}</span>
         <span className="att_date">{atten_date[0]}</span>
       </div>
-      <div className="center"></div>
       <div className="right">
         <span className="att_date"></span>
         {}
-        <Button className="buttons" variant="outline-danger">퇴근 확인</Button>
+        <Button className="buttons" variant="outline-danger">Check Now</Button>
       </div>
     </div>
     </div>

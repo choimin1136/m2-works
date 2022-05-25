@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { createUserWithEmailAndPassword } from "firebase/auth"
+import { signInWithEmailAndPassword  } from "firebase/auth"
 import { auth } from "../../firebase"
 import './login.scss'
 import { useNavigate } from 'react-router-dom';
@@ -15,12 +15,13 @@ export default function Login(props) {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    createUserWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
+        setError(false);
         // Signed in
         const user = userCredential.user;
         console.log(user);
-        // navitage("/main");
+        navitage("/main");
       })
       .catch((error) => {
         setError(true);
