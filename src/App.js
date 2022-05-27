@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { BrowserRouter, Route, Routes, } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, } from "react-router-dom";
 import Login_User from './layout/login/Login_user';
 import Dashboard from './container/Dashboard';
 import Topbar from './components/topbar/Topbar';
@@ -10,27 +10,52 @@ import List from './layout/list/List';
 import Login from './layout/login/Login';
 import "./style/dark.scss";
 import { DarkModeContext } from './context/darkModeContext';
+import { AuthContext } from './context/AuthContext';
 
 function App() {
-  let [login, login_update] = useState(true)
-  const {darkMode} = useContext(DarkModeContext)
+  const {darkMode} = useContext(DarkModeContext);
+
+  const {currentUser} = useContext(AuthContext);
+
+
+  const RequireAuth = ({children}) => {
+    return currentUser ? children : <Navigate to="/login" />;
+  };
+
+  // console.log(currentUser)
 
   return (
     <div className={darkMode ? "app dark" : "app"}>
       <BrowserRouter>
         <Routes>
           <Route path="/">
-            <Route index element={<Home/>}/>
             <Route path="login" element={<Login/>}/>
+            <Route index element={
+              <RequireAuth>
+                <Home/>
+              </RequireAuth>}/>
             <Route path="users">
-              <Route index element={<List/>}/>
-              <Route path=":userEmail" element={<Single/>}/>
+              <Route index element={
+                <RequireAuth>
+                  <List/>
+                </RequireAuth>}/>
+              <Route path=":userEmail" element={
+                <RequireAuth><Single/></RequireAuth>}/>
               <Route path="new" element={<New/>}/>
             </Route>
             <Route path="products">
-              <Route index element={<List/>}/>
-              <Route path=":productId" element={<Single/>}/>
-              <Route path="new" element={<New/>}/>
+              <Route index element={
+                <RequireAuth>
+                  <List/>
+                </RequireAuth>}/>
+              <Route path=":productId" element={
+                <RequireAuth>
+                  <Single/>
+                </RequireAuth>}/>
+              <Route path="new" element={
+                <RequireAuth>
+                  <New/>
+                </RequireAuth>}/>
             </Route>
           </Route>
         </Routes>

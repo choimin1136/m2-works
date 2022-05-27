@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { signInWithEmailAndPassword  } from "firebase/auth"
 import { auth } from "../../firebase"
 import './login.scss'
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 
 
 export default function Login(props) {
@@ -11,6 +12,7 @@ export default function Login(props) {
   const [password, setPassword] = useState("");
 
   const navitage = useNavigate();
+  const {log_dispatch} = useContext(AuthContext);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -20,8 +22,9 @@ export default function Login(props) {
         setError(false);
         // Signed in
         const user = userCredential.user;
-        console.log(user);
-        navitage("/main");
+        log_dispatch({type:"LOGIN", payload:user})
+        // console.log(user)
+        navitage("/")
       })
       .catch((error) => {
         setError(true);
