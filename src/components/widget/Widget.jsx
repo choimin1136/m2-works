@@ -1,9 +1,27 @@
 import "./widget.scss";
 import React, { useContext, useEffect, useState } from 'react';
 import { Button } from "react-bootstrap";
+import { getTimeProps } from "antd/lib/date-picker/generatePicker";
 
+function Clock(){
+    let [time, setTime] = useState();
 
-  
+    function getTime() {
+      const date = new Date();
+      const filterTime = date.toLocaleTimeString().split(" ")[1];
+      setTime(filterTime)
+    }
+
+    useEffect(() => {
+      setInterval(getTime.apply, 1000)
+      return () => {
+        setInterval(getTime, 1000)
+      }
+    }, [])
+    console.log('filterTime', time)
+
+    return (<>{time}</>)
+  }
 
 function Widget(props) {
   let [location, location_up] = useState(["첨단 3D 상용화지원센터", "하남 kbi 지식산업센터"])
@@ -77,7 +95,7 @@ function Widget(props) {
                 <div className="left">
                   <span className="title">Leave</span>
                   <span className="location">퇴근 버튼을 누르시면 퇴근시간이 기록됩니다.</span>
-                  <span className="att_date">{atten_date} <span className="att_time">{getTime}</span></span>
+                  <span className="att_date">{atten_date} <span className="att_time"><Clock/></span></span>
                 </div>
                 <div className="right">
                   <span className="att_date"></span>

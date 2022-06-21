@@ -8884,6 +8884,11 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
+react-live-clock@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/react-live-clock/-/react-live-clock-6.0.1.tgz#827f46365f1084ea687b0b8cb4983d9d4df3ccf9"
+  integrity sha512-o+nNwgfDGmYGMQPWLxLUc7rUIpwhAuYlJ/du/94Hd5z1zSb+faRfIk6EC4YgAgPik+qlhXalX6I2FvguhReceQ==
+
 react-redux@^8.0.1:
   version "8.0.1"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-8.0.1.tgz#2bc029f5ada9b443107914c373a2750f6bc0f40c"
