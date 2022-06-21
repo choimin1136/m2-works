@@ -1,110 +1,149 @@
 import "./widget.scss";
 import React, { useContext, useEffect, useState } from 'react';
 import { Button } from "react-bootstrap";
-import { auth, db } from "../../firebase";
-import { collection, query, where, onSnapshot, getDocs, getDoc, doc, documentId, docs} from "firebase/firestore";
-import { AuthContext } from "../../context/AuthContext";
 
 
   
 
-const Widget = () => {
+function Widget(props) {
   let [location, location_up] = useState(["첨단 3D 상용화지원센터", "하남 kbi 지식산업센터"])
-  let [atten, atten_up] = useState(true)
-  let [atten_date, attten_date_up] = useState(["2022.xx.xx", "2022.x1.x1"])
-  let [empData, setEmp] = useState();
-  let [tagData, setTag] = useState();
-  let [logData, setLog] = useState();
+  let [getTime, setTime] = useState()
+  let [atten_date, atten_date_up] = useState()
 
-  let {log_dispatch} = useContext(AuthContext);
+  let today = new Date();
 
-  const user_email = "choimin1136@gmail.com";
+  function dateFormat(date) {
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    let hour = date.getHours();
+    
+    month = month >= 10 ? month : '0' + month;
+    day = day >= 10 ? day : '0' + day;
+    hour = hour >= 10 ? hour : '0' + hour;
+    
+    return date.getFullYear() + '-' + month + '-' + day;
+  }
 
+  function timeFormat(date) {
+    let minute = date.getMinutes();
+    let second = date.getSeconds();
+    
+    minute = minute >= 10 ? minute : '0' + minute;
+    second = second >= 10 ? second : '0' + second;
+
+    return minute + ':' + second;
+  }
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user"));
-    const tag_serial = "testBeacon";
-    // console.log(userData.email);
+    function getToday() {
+      if(dateFormat(today)!==atten_date){
+        atten_date_up(dateFormat(today))
+      }
+    }
+    getToday();
+  }, [dateFormat(today)])
 
-    const getLog = async () => {
-      try {
-        //로그인 데이터 기반 사원 데이터 호출
-        const querySnapshot = await getDocs(query(collection(db, "employee"), where("email", "==", userData.email)));
-        querySnapshot.docs.map((doc)=>(
-          setEmp({id:doc.id, ...doc.data()})
-        ))
-
-        // querySnapshot.map.docs((doc) => {
-        //   if (userData.email === doc.data().email) {
-        //     setEmp({id:doc.id, ...doc.data()});
-        //   }
-        // })
-
-        //태그 정보 호출
-        const docRef = doc(db, "beaconTag", empData.tag_serial.toString());
-        const docSnap = await getDoc(docRef);
-        setTag({id:docSnap.id, ...docSnap.data()})
-        console.log(tagData.id.toString())
-
-        // querySnapshot1.map.docs((doc) => {
-        //   if (empData.tag_serial === doc.id) {
-        //     setTag({id:doc.id, ...doc.data()});
-        //   }
-        // });
-
-        //로그 정보 호출
-        const querySnapshot2 = await getDocs(query(collection(db, "beaconTag/"+tagData.id.toString()+"/log")));
-        querySnapshot2.docs.map((doc)=>(
-          setLog({id:doc.id, ...doc.data()})
-        ))
-        // const querySnapshot2 = await getDocs(collection(db, "beaconTag/"+tagData.id.toString()+"/log"));
-        // const logList = [];
-        // querySnapshot2.map.docs((doc) => {
-        //   logList.push({id:doc.id, ...doc.data()});
-        // });
-
-        //Location 정보 호출
-        
-      } catch (err) {
-        console.log(err);
-        // alert('로그인 시간 만료');
-        // log_dispatch({type: "LOGOUT"});
+  useEffect(() => {
+    function getDateTime(){
+      if(getTime !== timeFormat(today)){
+        setTime(timeFormat(today))
       }
     };
-    getLog();
-  }, []);
+    getDateTime();
+  },[getTime])
 
-  console.log(empData)
-  console.log(tagData)
-  console.log(logData)
-
+  console.log('atten_date : ', getTime)
   return (
+
     <div className="atten">
-      <span className="title">Attendance & Leave</span>
-      <div className="widget">
-        <div className="left">
-          <span className="title">Attendance</span>
-          <span className="location">Location : {location[0]}</span>
-          <span className="att_date">{atten_date[0]}</span>
-        </div>
-        <div className="center"></div>
-        <div className="right">
-          <span className="att_date"></span>
-          <Button className="buttons" variant="outline-success">Check Now</Button>
-        </div>
-      </div>
-      <div className="widget">
-      <div className="left">
-        <span className="title">Leave</span>
-        <span className="location">Location : {location[1]}</span>
-        <span className="att_date">{atten_date[0]}</span>
-      </div>
-      <div className="right">
-        <span className="att_date"></span>
-        {}
-        <Button className="buttons" variant="outline-danger">Check Now</Button>
-      </div>
-    </div>
+      {
+        props.logData.id === atten_date ?
+          props.tagData.isattendance === true ?
+            <>
+              <span className="title">Attendance & Leave</span>
+              <div className="widget">
+                <div className="left">
+                  <span className="title">Attendance</span>
+                  <span className="location">Location : {props.cusData.location[props.logData.log_attendance[0]]}</span>
+                  <span className="att_date">{props.logData.id} <span className="att_time">{props.logData.log_attendance[1]}</span></span>
+                </div>
+                <div className="center"></div>
+                <div className="right">
+                  <span className="att_date"></span>
+                  <Button className="buttons" variant="outline-success" disabled>출근완료</Button>
+                </div>
+              </div>
+              <div className="widget">
+                <div className="left">
+                  <span className="title">Leave</span>
+                  <span className="location">퇴근 버튼을 누르시면 퇴근시간이 기록됩니다.</span>
+                  <span className="att_date">{atten_date} <span className="att_time">{getTime}</span></span>
+                </div>
+                <div className="right">
+                  <span className="att_date"></span>
+                  <Button className="buttons" variant="outline-danger">퇴 근</Button>
+                </div>
+              </div>
+            </>
+          :
+            <>
+              <span className="title">Attendance & Leave</span>
+              <div className="widget">
+                <div className="left">
+                  <span className="title">Attendance</span>
+                  <span className="location">Location : {props.cusData.location[props.logData.log_attendance[0]]}</span>
+                  <span className="att_date">{props.logData.id} <span className="att_time">{props.logData.log_attendance[1]}</span></span>
+                </div>
+                <div className="center"></div>
+                <div className="right">
+                  <span className="att_date"></span>
+                  <Button className="buttons" variant="outline-success" disabled>출근완료</Button>
+                </div>
+              </div>
+              <div className="widget">
+                <div className="left">
+                  <span className="title">Leave</span>
+                  <span className="location">Location : {props.cusData.location[props.logData.log_leave[0]]}</span>
+                  <span className="att_date">{props.logData.id} <span className="att_time">{props.logData.log_leave[1]}</span></span>
+                </div>
+                <div className="right">
+                  <span className="att_date"></span>
+                  <Button className="buttons" variant="outline-danger" disabled>퇴근완료</Button>
+                </div>
+              </div>
+            </>
+        :
+          <>
+            <span className="title">Attendance & Leave</span>
+            <div className="widget">
+              <div className="left">
+                <span className="title">Attendance</span>
+                <span className="location">출근 버튼을 누르시면 출근시간이 기록됩니다.</span>
+                <span className="att_date">{atten_date}</span>
+              </div>
+              <div className="center"></div>
+              <div className="right">
+                <span className="att_date"></span>
+                <Button className="buttons" variant="outline-success">출 근</Button>
+              </div>
+            </div>
+            <div className="widget">
+              <div className="left">
+                <span className="title">Leave</span>
+                <span className="location">현재 미출근 상태입니다.</span>
+                <span className="att_date"></span>
+              </div>
+              <div className="right">
+                <span className="att_date"></span>
+                <Button className="buttons" variant="outline-danger" disabled>미 출 근</Button>
+              </div>
+            </div>
+          </>
+      }
+
+
+
+
     </div>
   )
 };

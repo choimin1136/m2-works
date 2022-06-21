@@ -8,11 +8,11 @@ import './single.scss'
 
 
 
-export default function Single() {
+export default function Single(props) {
 
   const userData = [
     {
-      id: 11,
+      id: props.id,
       username: "Alex",
       img: "https://firebasestorage.googleapis.com/v0/b/safe-zone-backup.appspot.com/o/photo_2021-11-05_14-33-40.jpg?alt=media&token=e83652b3-171c-4844-b658-c99a414b4d37",
       email: "choimin1136@gmail.com",
@@ -33,22 +33,22 @@ export default function Single() {
               <div className="item">
                 <img src="https://firebasestorage.googleapis.com/v0/b/safe-zone-backup.appspot.com/o/photo_2021-11-05_14-33-40.jpg?alt=media&token=e83652b3-171c-4844-b658-c99a414b4d37" alt="" className="itemImg" />
                 <div className="details">
-                  <h1 className="itemTitle">Min-hyeok Choi</h1>
+                  <h1 className="itemTitle">{props.empData.nickname}</h1>
                   <div className="detailItem">
-                    <span className="itemKey">Email:</span>
-                    <span className="itemBalue">choimin1136@gmail.com</span>
+                    <span className="itemKey">Email: </span>
+                    <span className="itemBalue">{props.empData.email}</span>
                   </div>
                   <div className="detailItem">
-                    <span className="itemKey">Phone:</span>
-                    <span className="itemBalue">010-0000-0000</span>
+                    <span className="itemKey">Team: </span>
+                    <span className="itemBalue">{props.empData.team}</span>
                   </div>
                   <div className="detailItem">
-                    <span className="itemKey">Address:</span>
-                    <span className="itemBalue">choimin1136@gmail.com</span>
+                    <span className="itemKey">Position: </span>
+                    <span className="itemBalue">{props.empData.position}</span>
                   </div>
                   <div className="detailItem">
-                    <span className="itemKey">Work Date:</span>
-                    <span className="itemBalue">2021-05-31</span>
+                    <span className="itemKey">Work Date: </span>
+                    <span className="itemBalue">{props.empData.emp_date}</span>
                   </div>
                 </div>
               </div>
