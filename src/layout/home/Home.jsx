@@ -132,7 +132,7 @@ export default function Home() {
                 <Widget logData = {logData} cusData = {cusData} tagData = {tagData} />
               </Col>
               <Col xxl={6} xs={6}>
-                <Chart_atten />
+                <Chart_atten logData = {logData} cusData = {cusData} tagData = {tagData} />
               </Col>
             </div>
 

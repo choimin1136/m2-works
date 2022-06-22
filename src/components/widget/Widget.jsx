@@ -8,17 +8,16 @@ function Clock(){
 
     function getTime() {
       const date = new Date();
-      const filterTime = date.toLocaleTimeString().split(" ")[1];
+      const filterTime = date.toTimeString().split(" ")[0];
       setTime(filterTime)
     }
 
     useEffect(() => {
-      setInterval(getTime.apply, 1000)
+      // setInterval(getTime.apply, 1000);
       return () => {
         setInterval(getTime, 1000)
       }
     }, [])
-    console.log('filterTime', time)
 
     return (<>{time}</>)
   }
