@@ -1,27 +1,66 @@
 import "./widget.scss";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from "react-bootstrap";
-import { AccountBalanceOutlined, KeyboardArrowDown, KeyboardArrowUp, MonetizationOnOutlined, PersonOutlined, ShoppingCartOutlined } from "@material-ui/icons";
+import { AccountBalanceOutlined, PeopleAlt, KeyboardArrowUp, MonetizationOnOutlined, Business, } from "@material-ui/icons";
 import { MonitorOutlined } from "@mui/icons-material";
 import { breadcrumbsClasses } from "@mui/material";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../firebase";
 
-const Widgets = ({ type }) => {
-    let [location, location_up] = useState(["첨단 3D 상용화지원센터", "하남 kbi 지식산업센터"])
-    let [atten, atten_up] = useState(true)
-    let [atten_date, attten_date_up] = useState(["2022.xx.xx", "2022.x1.x1"]) 
-
+function Widgets({ type }, props) {
     let data;
+    let [cusData, set_cusData] = useState(0);
+    let [empData, set_empData] = useState(0);
 
-    const people = 6;
-    const won = "2,000,000";
+
+    useEffect(() => {
+        const getCom = async (params) => {
+            try {
+              //로그 정보 호출
+              let emp_list = []
+              const querySnapshot = await getDocs(query(collection(db, "employee"), where("cus_serial", "==", cusData)));
+              console.log('docs', querySnapshot.docs[0].id)
+              querySnapshot.docs.map((doc)=>(
+                emp_list.push({id:doc.id, ...doc.data()})
+              ))
+              set_empData(emp_list);
+            } catch (err) {
+              console.log('회사 데이터 불러오는 중..')
+              console.log(empData)
+            }
+          };
+          getCom();
+    }, [props])
+
+    useEffect(() => {
+        const getAtten = async (params) => {
+            try {
+              //로그 정보 호출
+              let emp_list = []
+              const querySnapshot = await getDocs(query(collection(db, "employee"), where("cus_serial", "==", cusData)));
+              console.log('docs', querySnapshot.docs[0].id)
+              querySnapshot.docs.map((doc)=>(
+                emp_list.push({id:doc.id, ...doc.data()})
+              ))
+              set_empData(emp_list);
+            } catch (err) {
+              console.log('회사 데이터 불러오는 중..')
+              console.log(empData)
+            }
+          };
+          getAtten();
+    }, [])
+    
+    // console.log('cusData', empData)
 
     switch(type){
         case "user":
             data={
                 title:"USERS",
                 isMoney: false,
+                count: empData.length,
                 link: "See all users",
-                icon: <PersonOutlined className="icon" style={
+                icon: <PeopleAlt className="icon" style={
                     {color: "crimson",
                     backgroundColor: "rgba(255, 0, 0, 0.2)" }} />,
             };
@@ -31,25 +70,25 @@ const Widgets = ({ type }) => {
                 title:"Attendance User",
                 isMoney: false,
                 link: "View all orders",
-                icon: <ShoppingCartOutlined className="icon" style={
-                    {color: "goldenrod",
-                    backgroundColor: "rgba(128, 165, 32, 0.2)" }}  />,
+                icon: <Business className="icon" style={
+                    {color: "green",
+                    backgroundColor: "rgba(0, 128, 0, 0.2)" }}  />,
             };
             break;
         case "earning":
             data={
                 title:"EARNINGS",
-                isMoney: true,
+                isMoney: false,
                 link: "View all earnings",
                 icon: <MonetizationOnOutlined className="icon" style={
-                    {color: "green",
-                    backgroundColor: "rgba(0, 128, 0, 0.2)" }} />,
+                    {color: "goldenrod",
+                    backgroundColor: "rgba(128, 165, 32, 0.2)" }} />,
             };
             break;
         case "balance":
             data={
                 title:"BALANCES",
-                isMoney: true,
+                isMoney: false,
                 link: "View all balances",
                 icon: <AccountBalanceOutlined className="icon" style={
                     {color: "purple",
@@ -62,18 +101,25 @@ const Widgets = ({ type }) => {
 
     return (
         <div className="widget">
-          <div className="left">
-            <span className="title">{data.title}</span>
-            <span className="counter">{data.isMoney  === true ? "￦ " + won : people} </span>
-            <span className="link">{data.link}</span>
-          </div>
-          <div className="right">
-              <div className="percentage positive">
-                  <KeyboardArrowUp />
-                  20 %
-              </div>
-              {data.icon}
-          </div>
+        {empData === null
+        ?
+        <div className="loading">
+        
+        </div>
+        :
+            <>
+                <div className="left">
+                    <span className="title">{data.title}</span>
+                    <span className="counter">{data.count} </span>
+                    <span className="link">{data.link}</span>
+                </div>
+                <div className="right">
+                    <div className="percentage positive">
+                    </div>
+                    {data.icon}
+                </div>
+            </>
+        }
         </div>
     )
 };

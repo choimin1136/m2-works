@@ -4,15 +4,20 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from "react-router-dom"
 import { DarkModeContext } from "../../context/darkModeContext";
 import { AuthContext } from "../../context/AuthContext";
 
-export const Sidebar = () => {
-    let [admin, admin_up] = useState(true);
+export function Sidebar(props) {
+    let [admin, admin_up] = useState(false);
     let {dispatch} = useContext(DarkModeContext);
     let {log_dispatch} = useContext(AuthContext);
+
+    useEffect(() => {
+      admin_up(props.empData.admin)
+    }, [props])
+    
 
   return (
     <div className="sidebar">

@@ -11,6 +11,8 @@ import "./home.scss"
 import { auth, db } from "../../firebase";
 import { collection, query, where, onSnapshot, getDocs, getDoc, doc, documentId, docs} from "firebase/firestore";
 import { AuthContext } from "../../context/AuthContext";
+import Datatable from '../../components/datatable/Datatable'
+
 //import Unity, { UnityContext } from "react-unity-webgl";
 
 // const unityContext = new UnityContext({
@@ -25,8 +27,8 @@ export default function Home() {
 
   let [userData, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   let [empData, setEmp] = useState(null);
-  let [tagData, setTag] = useState();
-  let [cusData, setCus] = useState();
+  let [tagData, setTag] = useState(null);
+  let [cusData, setCus] = useState(null);
   let [logData, setLog] = useState(null);
 
   let {log_dispatch} = useContext(AuthContext);
@@ -38,7 +40,7 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    const tag_serial = "testBeacon";
+    // const tag_serial = "testBeacon";
     // console.log(userData.email);
 
     const getUser = async () => {
@@ -59,6 +61,8 @@ export default function Home() {
   useEffect(() => {
       const getTag = async (params) => {
         try {
+          //실시간 호출 코드
+          // onSnapshot(doc(db, "beaconTag", empData.tag_serial.toString()),
           //태그 정보 호출
           const docRef = doc(db, "beaconTag", empData.tag_serial.toString());
           const docSnap = await getDoc(docRef);
@@ -102,15 +106,19 @@ export default function Home() {
   
   
   
-  console.log(empData)
-  console.log(tagData)
-  console.log(cusData)
-  console.log(logData)
+  // console.log(empData)
+  // console.log(tagData)
+  // console.log(cusData)
+  // console.log(logData)
 
 
   return (
     <div className='home'>
-      <Sidebar/>
+      {empData !== null ?
+        <Sidebar empData={empData} />
+      :
+        <div></div>
+      }
       <div className="homeContainer">
         <Navbar/>
 
@@ -121,11 +129,17 @@ export default function Home() {
           :
           <> 
             <div className="widgets">
-            <Widgets type="user"/>
-            <Widgets type="order"/>
-            <Widgets type="earning"/>
-            <Widgets type="balance"/>
-            {/* <Unity className='unity' unityContext={unityContext}/> */}
+            {cusData !== null ?
+              <>
+              <Widgets type="user" cusData = {cusData}/>
+              <Widgets type="order" cusData = {cusData}/>
+              <Widgets type="earning" cusData = {cusData}/>
+              <Widgets type="balance" cusData = {cusData} />
+              </>
+            
+            :
+            null
+            }
             </div>
             <div className="a_widgets">
               <Col xxl={6} xs={6}>

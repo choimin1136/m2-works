@@ -2,6 +2,9 @@ import "./widget.scss";
 import React, { useContext, useEffect, useState } from 'react';
 import { Button } from "react-bootstrap";
 import { getTimeProps } from "antd/lib/date-picker/generatePicker";
+import { async } from "@firebase/util";
+import { setDoc } from "firebase/firestore";
+import { db } from "../../firebase";
 
 function Clock(){
     let [time, setTime] = useState();
@@ -19,7 +22,7 @@ function Clock(){
       }
     }, [])
 
-    return (<>{time}</>)
+    return time
   }
 
 function Widget(props) {
@@ -69,9 +72,22 @@ function Widget(props) {
     getDateTime();
   },[getTime])
 
-  console.log('atten_date : ', getTime)
-  return (
+  
+  async function setAtten({id}){
+    try {
+      //태그 로그 저장
+      const docRef = setDoc(db, "beaconTag/${id}/log", atten_date,
+        //로그 데이터 설정 해주어야 됨 (2022-06-28까지 진행함)  
+      );
+      
+    } catch (err) {
+      console.log("태그 데이터 불러오는 중..");
+    }
+  };
 
+  console.log('atten_date : ', atten_date + today.toTimeString().split(" ")[0])
+  return (
+    
     <div className="atten">
       {
         props.logData.id === atten_date ?
@@ -141,7 +157,7 @@ function Widget(props) {
               <div className="center"></div>
               <div className="right">
                 <span className="att_date"></span>
-                <Button className="buttons" variant="outline-success">출 근</Button>
+                <Button className="buttons" variant="outline-success" onClick={setAtten(props.tagData.id)} >출 근</Button>
               </div>
             </div>
             <div className="widget">
