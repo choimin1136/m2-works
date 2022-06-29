@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Button } from "react-bootstrap";
 import { getTimeProps } from "antd/lib/date-picker/generatePicker";
 import { async } from "@firebase/util";
-import { setDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 
 function Clock(){
@@ -25,34 +25,21 @@ function Clock(){
     return time
   }
 
+function dateFormat(date) {
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
+  
+  month = month >= 10 ? month : '0' + month;
+  day = day >= 10 ? day : '0' + day;
+  
+  return date.getFullYear() + '-' + month + '-' + day;
+}
+
 function Widget(props) {
   let [location, location_up] = useState(["첨단 3D 상용화지원센터", "하남 kbi 지식산업센터"])
-  let [getTime, setTime] = useState()
   let [atten_date, atten_date_up] = useState()
 
   let today = new Date();
-
-  function dateFormat(date) {
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-    let hour = date.getHours();
-    
-    month = month >= 10 ? month : '0' + month;
-    day = day >= 10 ? day : '0' + day;
-    hour = hour >= 10 ? hour : '0' + hour;
-    
-    return date.getFullYear() + '-' + month + '-' + day;
-  }
-
-  function timeFormat(date) {
-    let minute = date.getMinutes();
-    let second = date.getSeconds();
-    
-    minute = minute >= 10 ? minute : '0' + minute;
-    second = second >= 10 ? second : '0' + second;
-
-    return minute + ':' + second;
-  }
 
   useEffect(() => {
     function getToday() {
@@ -62,28 +49,6 @@ function Widget(props) {
     }
     getToday();
   }, [dateFormat(today)])
-
-  useEffect(() => {
-    function getDateTime(){
-      if(getTime !== timeFormat(today)){
-        setTime(timeFormat(today))
-      }
-    };
-    getDateTime();
-  },[getTime])
-
-  
-  async function setAtten({id}){
-    try {
-      //태그 로그 저장
-      const docRef = setDoc(db, "beaconTag/${id}/log", atten_date,
-        //로그 데이터 설정 해주어야 됨 (2022-06-28까지 진행함)  
-      );
-      
-    } catch (err) {
-      console.log("태그 데이터 불러오는 중..");
-    }
-  };
 
   console.log('atten_date : ', atten_date + today.toTimeString().split(" ")[0])
   return (
@@ -114,7 +79,7 @@ function Widget(props) {
                 </div>
                 <div className="right">
                   <span className="att_date"></span>
-                  <Button className="buttons" variant="outline-danger">퇴 근</Button>
+                  <Button className="buttons" variant="outline-danger" onClick={()=>{setLeave(props.tagData.id)}}>퇴 근</Button>
                 </div>
               </div>
             </>
@@ -152,12 +117,12 @@ function Widget(props) {
               <div className="left">
                 <span className="title">Attendance</span>
                 <span className="location">출근 버튼을 누르시면 출근시간이 기록됩니다.</span>
-                <span className="att_date">{atten_date}</span>
+                <span className="att_date">{atten_date} <span className="att_time"><Clock/></span></span>
               </div>
               <div className="center"></div>
               <div className="right">
                 <span className="att_date"></span>
-                <Button className="buttons" variant="outline-success" onClick={setAtten(props.tagData.id)} >출 근</Button>
+                <Button className="buttons" variant="outline-success" onClick={()=>{setAtten(props.tagData.id)}} >출 근</Button>
               </div>
             </div>
             <div className="widget">
@@ -173,12 +138,43 @@ function Widget(props) {
             </div>
           </>
       }
-
-
-
-
     </div>
   )
+};
+
+async function setAtten(id){
+  let today = new Date();
+  try {
+    //태그 로그 저장
+    await updateDoc(doc(db, "beaconTag", id), {isattendance: true});
+    await setDoc(doc(db, "beaconTag/"+ id.toString() + "/log", dateFormat(today).toString()),
+      //로그 데이터 설정 해주어야 됨 (2022-06-28까지 진행함)
+      {
+         log_attendance: [0,today.toTimeString().split(" ")[0]],
+         log_leave: [0, ""]
+      });
+    window.location.replace("/");
+    console.log('id', id)
+  } catch (err) {
+    console.log('err', err)
+    alert("저장실패!");
+  }
+};
+
+async function setLeave(id){
+  let today = new Date();
+  try {
+    //태그 로그 저장
+    await updateDoc(doc(db, "beaconTag", id), {isattendance: false});
+    await updateDoc(doc(db, "beaconTag/"+ id.toString() + "/log", dateFormat(today).toString()),
+      //로그 데이터 설정 해주어야 됨 (2022-06-28까지 진행함)
+      {
+         log_leave: [0, today.toTimeString().split(" ")[0]]
+      });
+    window.location.replace("/");
+  } catch (err) {
+    alert("저장실패!");
+  }
 };
 
 export default Widget
